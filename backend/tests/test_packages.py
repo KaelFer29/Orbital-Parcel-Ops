@@ -27,7 +27,7 @@ def test_list_packages_success(mock_db_query):
 def test_get_package_not_found(mock_db_query):
     mock_db_query.return_value = None
     
-    event = {'pathParameters': {'id': '999'}}
+    event = {'path': '/packages/999'}
     resp = packages.get_package(event)
     
     assert resp['statusCode'] == 404
