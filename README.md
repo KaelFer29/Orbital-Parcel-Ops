@@ -2,6 +2,60 @@
 
 Sistema de seguimiento de paquetes interplanetarios basado en AWS Lambda, API Gateway y RDS PostgreSQL.
 
+---
+
+## 🎯 Acceso Directo - Prueba Inmediata (Sin Instalaciones)
+
+**El encargado puede probar todo directamente sin levantar nada localmente:**
+
+### 📍 Repositorio y Estado
+- **GitHub:** https://github.com/KaelFer29/Orbital-Parcel-Ops
+- **CI/CD Status:** GitHub Actions - Todos los tests pasan ✅ (9/9)
+- **Estructura:** Commits bien organizados con Conventional Commits
+
+### 🚀 API En Vivo - Endpoints Funcionales
+**Base URL:** `https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev`
+
+Copiar y pegar en terminal o navegador:
+
+```bash
+# Health Check
+curl https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev/health
+
+# Listar todos los paquetes (10 paquetes pre-poblados)
+curl https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev/packages
+
+# Obtener un paquete específico
+curl https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev/packages/1
+
+# Listar todos los escaneos (15 escaneos pre-poblados)
+curl https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev/scans
+
+# Listar escaneos por paquete
+curl 'https://c35genorc3.execute-api.us-east-1.amazonaws.com/dev/scans?package_id=1'
+```
+
+### 💰 Costos - Capa Gratuita
+| Servicio | Uso Gratuito | Costo |
+|----------|--------------|-------|
+| Lambda | 1M solicitudes/mes + 400K GB-seg | $0 |
+| API Gateway | 1M llamadas/mes | $0 |
+| RDS PostgreSQL | 750 horas/mes + 20GB | $0 |
+| **Total** | | **$0/mes ✅** |
+
+### 📋 Pruebas Automatizadas
+```bash
+# Todos los tests pasan
+cd backend
+pytest -v
+# 9 passed in 0.05s ✅
+```
+
+---
+
+## Arquitectura
+Sistema de seguimiento de paquetes interplanetarios basado en AWS Lambda, API Gateway y RDS PostgreSQL.
+
 ## Arquitectura
 
 - **Backend:** Python 3.11 (Lambda)
