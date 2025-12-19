@@ -49,7 +49,7 @@ orbital-parcel-ops/
 
 ## Setup Local
 
-### 1. Clonar repositorio
+### 1. Clonar el repositorio
 
 ```bash
 git clone <repo-url>
@@ -66,7 +66,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3. Ejecutar tests
+### 3. Ejecutar pruebas
 
 ```bash
 # Desde el directorio raíz
@@ -80,8 +80,8 @@ pytest -v
 ## Quick Start: Despliegue en AWS (5-15 min)
 
 ```bash
-# 1. Configurar AWS
-aws configure  # Ingresa access key, secret key, región (us-east-1)
+# 1. Configurar credenciales de AWS
+aws configure  # Ingresar access key, secret key, región (us-east-1)
 
 # 2. Instalar OpenTofu
 # En macOS: brew install opentofu
@@ -95,7 +95,7 @@ make package
 cd infra
 
 # Configurar variables
-export TF_VAR_db_password="ChangeMe123!"  # Cambiar a contraseña fuerte
+export TF_VAR_db_password="ChangeMe123!"  # Cambiar por contraseña fuerte
 
 # Inicializar Terraform
 tofu init
@@ -103,14 +103,14 @@ tofu init
 # Ver cambios (opcional)
 tofu plan
 
-# Aplicar (tarda ~10-15 min)
+# Aplicar (tardará ~10-15 min)
 tofu apply
 
 # Obtener URL de la API
 API_URL=$(tofu output -raw api_url)
 echo "API: $API_URL"
 
-# 5. Ejecutar migraciones y seed
+# 5. Ejecutar migraciones y datos de prueba
 cd ..
 DB_HOST=$(cd infra && tofu output -raw db_endpoint | cut -d: -f1)
 export DATABASE_URL="postgresql://postgres:ChangeMe123!@$DB_HOST:5432/orbital_parcel_ops"
@@ -118,7 +118,7 @@ export DATABASE_URL="postgresql://postgres:ChangeMe123!@$DB_HOST:5432/orbital_pa
 make migrate
 make seed
 
-# 6. Testear API
+# 6. Probar API
 curl "$API_URL/health"
 curl "$API_URL/packages" | python -m json.tool
 ```
@@ -127,16 +127,16 @@ curl "$API_URL/packages" | python -m json.tool
 
 ```bash
 cd infra
-tofu destroy  # Responder 'yes' para confirmar
+tofu destroy  # Responder "yes" para confirmar
 ```
 
 ---
 
 ## Despliegue en AWS (Detallade)
 
-### Prerequisitos
+### Requisitos previos
 
-- AWS CLI configurado (`aws configure`)
+- AWS CLI configurado (ejecutar `aws configure`)
 - OpenTofu o Terraform instalado
 - Credenciales AWS con permisos para Lambda, RDS, VPC, API Gateway
 
@@ -162,7 +162,7 @@ bash scripts/package_lambda.sh
 
 Esto crea `backend/build/lambda.zip` con código y dependencias.
 
-### Paso 2: Configurar variables Terraform
+### Paso 2: Configurar variables de Terraform
 
 Crea un archivo `infra/terraform.tfvars`:
 
@@ -171,10 +171,10 @@ aws_region  = "us-east-1"
 environment = "dev"
 db_name     = "orbital_parcel_ops"
 db_username = "postgres"
-db_password = "TU_PASSWORD_SEGURO"  # Usa secretos en producción
+db_password = "TU_PASSWORD_SEGURO"  # Usar secretos en producción
 ```
 
-**Importante:** No commitees `terraform.tfvars` con contraseñas. Usa variables de entorno:
+**Importante:** No confirmar `terraform.tfvars` con contraseñas. Usar variables de entorno:
 
 ```bash
 export TF_VAR_db_password="tu_password_seguro"
@@ -193,7 +193,7 @@ tofu init  # O terraform init
 tofu plan
 ```
 
-Revisa los recursos que se van a crear (VPC, RDS, Lambda, API Gateway, etc.).
+Revisar los recursos que se van a crear (VPC, RDS, Lambda, API Gateway, etc.).
 
 ### Paso 5: Aplicar infraestructura
 
@@ -201,7 +201,7 @@ Revisa los recursos que se van a crear (VPC, RDS, Lambda, API Gateway, etc.).
 tofu apply
 ```
 
-Confirma con `yes`. Esto tarda ~10-15 minutos (RDS tarda en crear).
+Confirmar con `yes`. Esto tardará ~10-15 minutos (RDS tarda en crearse).
 
 ### Paso 6: Obtener URL de la API
 
@@ -348,25 +348,25 @@ cd infra && tofu destroy
 
 GitHub Actions workflow en `.github/workflows/ci.yml`:
 
-- Ejecuta tests en cada push/PR
-- Instala dependencias
-- Corre pytest
+- Ejecutar tests en cada push/PR
+- Instalar dependencias
+- Ejecutar pytest
 
-Para añadir despliegue automático, añade:
+Para agregar despliegue automático, agregar:
 - Secretos AWS en GitHub
 - Step para empaquetar Lambda
 - Step para `tofu apply`
 
 ## Desarrollo
 
-### Añadir nuevos endpoints
+### Agregar nuevos endpoints
 
 1. Crear handler en `backend/app/handlers/`
-2. Añadir ruta en `backend/app/main.py`
-3. Añadir tests en `backend/tests/`
+2. Agregar ruta en `backend/app/main.py`
+3. Agregar tests en `backend/tests/`
 4. Ejecutar `make test`
 
-### Modificar schema DB
+### Modificar schema de BD
 
 1. Editar `scripts/schema.sql`
 2. Ejecutar `make migrate`
@@ -406,28 +406,28 @@ Si necesitas migrar a otro driver:
 2. **Verificar subnets:**
    - Lambda debe estar en subnets privadas
    - RDS debe estar en el mismo VPC
-   - Si RDS está en subnet pública, asegurar que tiene public IP y `publicly_accessible=true` (solo para migraciones)
+   - Si RDS está en subnet pública, asegurar que tiene IP pública y `publicly_accessible=true` (solo para migraciones)
 
-3. **Revisar logs Lambda:**
+3. **Revisar logs de Lambda:**
    ```bash
    aws logs tail /aws/lambda/orbital-parcel-ops-api --follow --since 5m
    ```
 
-4. **Testear conexión manual:**
+4. **Probar conexión manual:**
    ```bash
    export DATABASE_URL="postgresql://postgres:PASSWORD@RDS_HOST:5432/orbital_parcel_ops"
    psql "$DATABASE_URL" -c "SELECT 1"
    ```
 
-### Tests fallan con import errors
+### Tests fallan con errores de importación
 
-- Asegúrate de activar el virtualenv: `source backend/.venv/bin/activate`
+- Asegurarse de activar el virtualenv: `source backend/.venv/bin/activate`
 - Verificar que `conftest.py` existe en `backend/tests/`
 - Ejecutar desde el directorio raíz: `make test`
 
 ### NAT Gateway muy caro
 
-Comenta el recurso `aws_nat_gateway` y `aws_eip` en `infra/vpc.tf` si no necesitas que Lambda acceda a internet. 
+Comentar el recurso `aws_nat_gateway` y `aws_eip` en `infra/vpc.tf` si no se necesita que Lambda acceda a internet. 
 
 **Nota:** Sin NAT Gateway, Lambda no podrá:
 - Hacer requests a APIs públicas
@@ -443,17 +443,17 @@ RDS seguirá siendo accesible sin NAT porque está en el mismo VPC.
 - RDS: Gratis (db.t3.micro, 750 horas/mes)
 - **Total: ~$0 en free tier** ✅
 
-## Despliegue Producción
+## Despliegue en Producción
 
 ### Seguridad
 
-1. **No uses `terraform.tfvars` con secretos** — Usa variable de entorno:
+1. **No usar `terraform.tfvars` con secretos** — Usar variable de entorno:
    ```bash
    export TF_VAR_db_password="secure_password"
    tofu apply  # No incluye contraseña en archivos
    ```
 
-2. **Almacena credenciales en AWS Secrets Manager:**
+2. **Almacenar credenciales en AWS Secrets Manager:**
    ```hcl
    # infra/rds.tf ya lo hace
    resource "aws_secretsmanager_secret_version" "db_credentials" {
@@ -466,13 +466,13 @@ RDS seguirá siendo accesible sin NAT porque está en el mismo VPC.
    }
    ```
 
-3. **Cierra RDS a internet:**
+3. **Cerrar RDS a internet:**
    ```hcl
    # infra/rds.tf - Producción
    publicly_accessible = false  # Solo acceso desde Lambda
    ```
 
-4. **Usa HTTPS en API Gateway** (AWS lo maneja automáticamente)
+4. **Usar HTTPS en API Gateway** (AWS lo maneja automáticamente)
 
 ### Backups
 
@@ -499,7 +499,3 @@ aws cloudwatch get-metric-statistics \
   --period 3600 \
   --statistics Average,Maximum
 ```
-
-## License
-
-MIT
