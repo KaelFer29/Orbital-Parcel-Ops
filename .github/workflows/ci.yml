@@ -7,6 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Package Lambda
+        run: |
+          bash scripts/package_lambda.sh
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
         with:
